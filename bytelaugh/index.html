@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ========== Metadata ========== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bytelaugh – Connect, share, and explore trending content." />
+  <meta name="author" content="Bytelaugh Team" />
+  <title>Bytelaugh</title>
+
+  <!-- ========== Favicon & Styles ========== -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="src/css/style.css" />
+
+  <style>
+    /* ===== Loader Styles ===== */
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #loading-screen {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #00bcd4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ===== Page Transition Styles ===== */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      transform: translateX(-100%);
+      transition: transform 0.6s ease-in-out;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .page-transition.active {
+      transform: translateX(0);
+    }
+
+    .noscript-warning {
+      background: #ff4444;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <p class="noscript-warning">Please enable JavaScript to use Bytelaugh.</p>
+  </noscript>
+
+  <!-- ===== Loading Screen ===== -->
+  <div id="loading-screen">
+    <div class="spinner" role="status" aria-label="Loading..."></div>
+    <h1 id="loading-text">Loading Bytelaugh...</h1>
+  </div>
+
+  <!-- ===== Page Transition Layer ===== -->
+  <div class="page-transition" id="transition"></div>
+
+  <!-- ===== Scripts ===== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initial transition out effect
+      const transition = document.getElementById("transition");
+      setTimeout(() => {
+        transition.classList.remove("active");
+      }, 100);
+
+      // Loader sequence
+      setTimeout(() => {
+        const text = document.getElementById("loading-text");
+        text.textContent = "Redirecting...";
+        setTimeout(() => (window.location.href = "pages/login.html"), 800);
+      }, 1500);
+
+      // Page transition on link click
+      document.querySelectorAll("a").forEach(link => {
+        const href = link.getAttribute("href");
+        if (href && !href.startsWith("http") && !href.startsWith("#")) {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            transition.classList.add("active");
+            setTimeout(() => {
+              window.location.href = href;
+            }, 600);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

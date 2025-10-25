@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Metadata -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bytelaugh - Mock Login & Sign Up Experience" />
+  <meta name="author" content="Bytelaugh Team" />
+  <title>Bytelaugh – Welcome</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="stylesheet" href="../src/css/style.css" />
+
+  <style>
+    /* ===== Base Styling ===== */
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #141428, #24244f);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .auth-container {
+      width: 360px;
+      padding: 40px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .auth-container h1 {
+      margin-bottom: 10px;
+      font-size: 1.9rem;
+    }
+
+    .auth-container p {
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 8px #4af3ff;
+    }
+
+    button {
+      width: 100%;
+      background: #4af3ff;
+      border: none;
+      color: #111;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #36d2e5;
+      transform: scale(1.03);
+    }
+
+    .switch {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .switch a {
+      color: #4af3ff;
+      text-decoration: none;
+      margin-left: 5px;
+    }
+
+    .switch a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: #4af3ff;
+      animation: fadeIn 0.6s ease;
+    }
+
+    /* Transition Overlay */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 9999;
+      transform: translateX(-100%);
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .page-transition.active {
+      transform: translateX(0);
+    }
+
+    /* Toggle Animation */
+    .auth-container.sign-up-mode {
+      transform: rotateY(180deg);
+    }
+
+    .form-box {
+      backface-visibility: hidden;
+      transition: transform 0.8s ease;
+    }
+
+    .form-box.hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-transition" id="transition"></div>
+
+  <div class="auth-container" id="auth-container">
+    <!-- LOGIN FORM -->
+    <div class="form-box" id="login-box">
+      <h1>Welcome Back</h1>
+      <p>Login to continue to Bytelaugh</p>
+
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button type="submit">Login</button>
+        <div class="message" id="login-message">Authenticating...</div>
+      </form>
+
+      <div class="switch">
+        Don't have an account?
+        <a href="#" id="to-signup">Sign Up</a>
+      </div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div class="form-box hidden" id="signup-box">
+      <h1>Create Account</h1>
+      <p>Join Bytelaugh today</p>
+
+      <form id="signup-form">
+        <input type="text" id="signup-username" placeholder="Username" required />
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <button type="submit">Sign Up</button>
+        <div class="message" id="signup-message">Creating account...</div>
+      </form>
+
+      <div class="switch">
+        Already have an account?
+        <a href="#" id="to-login">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const transition = document.getElementById("transition");
+    const loginBox = document.getElementById("login-box");
+    const signupBox = document.getElementById("signup-box");
+    const authContainer = document.getElementById("auth-container");
+
+    // ===== Page transition animation =====
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => transition.classList.remove("active"), 100);
+    });
+
+    // ===== Toggle between Login & Sign Up =====
+    document.getElementById("to-signup").addEventListener("click", (e) => {
+      e.preventDefault();
+      loginBox.classList.add("hidden");
+      signupBox.classList.remove("hidden");
+      authContainer.style.transform = "rotateY(180deg)";
+    });
+
+    document.getElementById("to-login").addEventListener("click", (e) => {
+      e.preventDefault();
+      signupBox.classList.add("hidden");
+      loginBox.classList.remove("hidden");
+      authContainer.style.transform = "rotateY(0deg)";
+    });
+
+    // ===== Mock Sign-Up =====
+    document.getElementById("signup-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("signup-message");
+      msg.style.display = "block";
+      msg.textContent = "Creating your account...";
+
+      setTimeout(() => {
+        msg.textContent = "✅ Account created successfully! Redirecting...";
+        transition.classList.add("active");
+        setTimeout(() => (window.location.href = "feed.html"), 1200);
+      }, 2000);
+    });
+
+    // ===== Mock Login =====
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("login-message");
+      msg.style.display = "block";
+      msg.textContent = "Authenticating...";
+
+      setTimeout(() => {
+        msg.textContent = "✅ Login successful! Redirecting...";
+        transition.classList.add("active");
+        setTimeout(() => (window.location.href = "feed.html"), 1200);
+      }, 1800);
+    });
+  </script>
+</body>
+</html>

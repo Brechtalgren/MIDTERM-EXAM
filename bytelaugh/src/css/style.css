@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Sample Page</title>
+<style>
+  :root {
+    --primary-color: #4A90E2;
+    --secondary-color: #ff6f61;
+    --gradient-bg: linear-gradient(135deg, #ece9e6, #ffffff);
+    --button-gradient: linear-gradient(135deg, #6a11cb, #2575fc);
+    --page-transition-gradient: linear-gradient(135deg, #ff9966, #ff5e62);
+  }
+
+  /* Reset & Base */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--gradient-bg);
+    color: #333;
+    line-height: 1.6;
+    padding: 30px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 3em;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+  }
+
+  p {
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #555;
+  }
+
+  /* Form Styles */
+  form {
+    max-width: 500px;
+    width: 100%;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 50px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  form:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.2); transform: translateY(-5px); }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #444;
+  }
+
+  input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    font-size: 1.1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
+    outline: none;
+  }
+
+  /* Button Styles */
+  button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    background: var(--button-gradient);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 15px rgba(37, 117, 252, 0.3);
+  }
+  button:hover { transform: scale(1.05); }
+
+  /* Links with ripple */
+  a {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--secondary-color);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1em;
+    position: relative;
+    overflow: hidden;
+  }
+  a .ripple {
+    position: absolute;
+    background: rgba(255,111,97,0.4);
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    transform: translate(-50%, -50%) scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes ripple { to { transform: translate(-50%, -50%) scale(15); opacity: 0; } }
+
+  /* Loading Screen */
+  #loading-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #ffffffdd; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 9999;
+    transition: opacity 0.5s ease;
+  }
+  .spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid var(--primary-color);
+    border-radius: 50%; width: 80px; height: 80px;
+    animation: spin 1.2s linear infinite; margin-bottom: 30px;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+  #loading-screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* Page Transition Overlay */
+  .page-transition {
+    position: fixed; top: 0; left: -100%; width: 100%; height: 100%;
+    background: var(--page-transition-gradient);
+    z-index: 9998;
+    transform: translateX(-100%);
+    transition: transform 0.8s ease-in-out;
+  }
+  .page-transition.active { transform: translateX(0); }
+
+  @media(max-width: 600px){
+    h1{ font-size:2em; }
+    form{ padding:30px 20px; }
+    button{ font-size:1em; }
+    p{ font-size:1.1em; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Sample Page with Ripple Effect</h1>
+<p>Click the links below to see the ripple effect in action.</p>
+
+<form>
+  <label for="name">Name</label>
+  <input type="text" id="name" placeholder="Your Name" />
+
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Your Email" />
+
+  <button type="submit">Submit</button>
+</form>
+
+<a href="#">This is a link with ripple</a><br/><br/>
+<a href="#">Another ripple link</a>
+
+<div id="loading-screen"><div class="spinner"></div></div>
+<div class="page-transition"></div>
+
+<script>
+  // Ripple effect on links
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      this.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+  });
+
+  // Hide loading screen on page load
+  window.addEventListener('load', () => {
+    const loading = document.getElementById('loading-screen');
+    if(loading) setTimeout(() => loading.classList.add('hidden'), 500);
+  });
+
+  // Page transition trigger
+  function triggerPageTransition(){
+    const overlay = document.querySelector('.page-transition');
+    if(overlay){
+      overlay.classList.add('active');
+      setTimeout(() => overlay.classList.remove('active'), 800);
+    }
+  }
+
+  // Form submission with transition
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      triggerPageTransition();
+      setTimeout(() => { /* simulate processing */ }, 1000);
+    });
+  });
+
+  // Button hover scale
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('mouseenter', () => btn.style.transform = 'scale(1.05)');
+    btn.addEventListener('mouseleave', () => btn.style.transform = 'scale(1)');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Metadata -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="User Profile - Bytelaugh." />
+  <meta name="author" content="Bytelaugh Team" />
+  <title>Profile - Bytelaugh</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="src/css/style.css" />
+
+  <style>
+    /* Existing styles from style.css */
+
+    /* ===== Page Transition Styles ===== */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: #000; /* Change as needed */
+      z-index: 9999;
+      transform: translateX(-100%);
+      transition: transform 0.6s ease-in-out;
+    }
+    .page-transition.active {
+      transform: translateX(0);
+    }
+  </style>
+
+  <!-- Redirect script (if applicable) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        document.getElementById("loading-text").textContent = "Redirecting...";
+        setTimeout(() => (window.location.href = "pages/profile.html"), 700);
+      }, 1500);
+    });
+  </script>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="spinner" role="status" aria-label="Loading"></div>
+    <h1 id="loading-text">Loading Bytelaugh...</h1>
+  </div>
+
+  <!-- Main Content: User Profile -->
+  <h1>User Profile</h1>
+  <p>Manage your profile information here.</p>
+  <!-- Example profile info -->
+  <form>
+    <label for="name">Name:</label><br />
+    <input type="text" id="name" name="name" value="John Doe" /><br /><br />
+    <label for="email">Email:</label><br />
+    <input type="email" id="email" name="email" value="john@example.com" /><br /><br />
+    <button type="submit">Update Profile</button>
+  </form>
+  <br />
+  <a href="index.html">Back to Home</a>
+
+  <!-- Page transition overlay -->
+  <div class="page-transition" id="transition"></div>
+
+  <script>
+    // ===== Page transition animation for links =====
+    const transition = document.getElementById("transition");
+    document.addEventListener("DOMContentLoaded", () => {
+      // Animate in on page load
+      setTimeout(() => {
+        transition.classList.remove("active");
+      }, 100);
+
+      // Add transition on link clicks
+      document.querySelectorAll("a").forEach(link => {
+        const href = link.getAttribute("href");
+        if (href && !href.startsWith("http") && !href.startsWith("#")) {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            transition.classList.add("active");
+            setTimeout(() => {
+              window.location.href = href;
+            }, 600);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

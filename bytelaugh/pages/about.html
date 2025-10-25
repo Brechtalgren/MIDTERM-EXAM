@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== Metadata ===== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="About Bytelaugh – Learn more about our platform and vision." />
+  <meta name="author" content="Bytelaugh Team" />
+  <title>About - Bytelaugh</title>
+
+  <!-- ===== Favicon & Styles ===== -->
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="stylesheet" href="../src/css/style.css" />
+
+  <style>
+    /* ===== Page Transition Styles ===== */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 9999;
+      transform: translateX(-100%);
+      transition: transform 0.6s ease-in-out;
+      pointer-events: none;
+    }
+    .page-transition.active {
+      transform: translateX(0);
+    }
+
+    /* ===== Animated Section Reveal ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== Page Styling ===== */
+    body {
+      background-color: #0b0b0b;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 120px auto;
+      padding: 2rem;
+      text-align: center;
+      line-height: 1.6;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #00bcd4;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+
+    a {
+      color: #00bcd4;
+      text-decoration: none;
+      border: 1px solid #00bcd4;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      background: #00bcd4;
+      color: #000;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== Page Transition Overlay ===== -->
+  <div class="page-transition" id="transition"></div>
+
+  <!-- ===== Main Content ===== -->
+  <main>
+    <section class="reveal">
+      <h1>About Bytelaugh</h1>
+      <p>
+        Bytelaugh is a lightweight social platform where humor meets creativity.
+        Our goal is to connect people through quick, shareable content — 
+        from memes and jokes to trending commentary — without unnecessary clutter.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <p>
+        The platform simulates a social media experience with animated interactions,
+        smooth transitions, and community-driven content — all in a lightweight,
+        front-end-only prototype.
+      </p>
+    </section>
+
+    <section class="reveal">
+      <a href="feed.html">Visit Feed</a>
+      <a href="index.html" style="margin-left: 10px;">Go Home</a>
+    </section>
+  </main>
+
+  <script>
+    // ===== Page Transition Animation =====
+    const transition = document.getElementById("transition");
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => transition.classList.remove("active"), 100);
+
+      document.querySelectorAll("a").forEach(link => {
+        const href = link.getAttribute("href");
+        if (href && !href.startsWith("http") && !href.startsWith("#")) {
+          link.addEventListener("click", e => {
+            e.preventDefault();
+            transition.classList.add("active");
+            setTimeout(() => (window.location.href = href), 600);
+          });
+        }
+      });
+    });
+
+    // ===== Scroll Reveal Animation =====
+    const revealElements = document.querySelectorAll(".reveal");
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.9;
+      revealElements.forEach(el => {
+        const boxTop = el.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) el.classList.add("visible");
+      });
+    };
+    window.addEventListener("scroll", revealOnScroll);
+    revealOnScroll();
+  </script>
+</body>
+</html>
